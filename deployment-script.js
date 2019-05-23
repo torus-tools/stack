@@ -1,5 +1,4 @@
-//load files from the .env file
-require('dotenv').load();
+require('dotenv').config();
 
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
@@ -10,7 +9,6 @@ var AWS = require('aws-sdk');
 
 // Load the other scripts
 var websiteScript = require('./website-script');
-var lambdaScript = require('./lambda-script');
 
 // Create S3 service objects
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -20,7 +18,6 @@ var iam = new AWS.IAM({apiVersion: '2010-05-08'});
 //var apigateway = new AWS.APIGateway({apiVersion: '2015-07-09'});
 
 // interact with fs
-const path = require("path");
 const fs = require('fs');
 
 // Package to open browser window
@@ -65,18 +62,47 @@ function logOptions() {
     console.log('create-cloudfront');
     stmt1();
 }
- 
-//welcome the user
-function welcome(){
-    console.log('Hello, welcome to Arjan!');
-    console.log('Arjan');
-    iam();
-}
+
+const arjan = `
+         @@@                                                     @@@@@@        
+     @@@(***(@@                                                @@*******%@@@   
+ @@@***********&@@           @@@@@@@@@@@@@@@@@@@@@           @@/*************&@
+@@@@@@(***,,****%@@ @@@@@&(********@       @******(&@@@@@ @@%****,,****@@@@   
+      @/**,,,,,****/(**************#@       @/************(/****,,,,***&@      
+      @#**,,,,,********************@        ,@******************,,,,***@@      
+       @***,,*********************@,         %@********************,***@       
+       @@************************@(           &&**********************@        
+        @@**********************%@             @%********************@@        
+         @*********************/@              .@*******************/@         
+         @*********************@&               &%*******************@         
+         @*********************@&               &%*******************@         
+         @/********************(@               @*******************/@         
+         @%********#@@@@@%******%@             @%*******#&*********&@         
+          @******@/ #@@@@@(@*****@/           &&*****&@@@@@@ #@*****@          
+          @*******@@*@@@@%  @*****@           @*****@ .@@@@@ /@%****@          
+          @**********/&@@@@@/*****@,         %&****#@&*,%@@@(*******@          
+         @@***********************@.         (@*********************@@         
+         @/**********************@%           @#********************/@         
+         @**********************@#             @@********************@         
+        @%********************#@.               .@/******************&@        
+        @/*******************@/                   %@*****************/@        
+        @/*****************@&                       @@***************/@        
+        @%***************&@                           @#*************&@        
+         @*************/@/        #@@@@@@@@@#          %@************@         
+          @************@         @@@@@@@@@@@@@           @**********@          
+          @@**********&%         .@@@@@@@@@@@.           @(********@@          
+           @@*********%&             &@@@%               @/*******@@           
+            @@********/@                                 @*******@@            
+              @/*******@#                               %&*****%@              
+               @@******/@                              ,@*****@@               
+                 @@*****%@                             @(***@@                 
+                    @&/**@@@@@@@@@@@@,(%%#/,@@@@@@@@@@@@&%/@                                       
+`
 
 //User options
 function stmt1(){
     readline.question(`Plase type in one of the options`, (res) => {
-        switch(convertInput(res)) {
+        switch(res) {
             case 'create-static-site':
                 createStaticSite();
                 break;
@@ -88,15 +114,14 @@ function stmt1(){
 }
 
 //create the IAM role
-function iam(){
+function createIam(){
     readline.question(`Have you already created an IAM user for Arjan? [Y/n]`, (res3) => {
         switch(convertInput(res3)) {
             case 'y':
                 logOptions();
                 break;
             case 'n':
-                console.log(`please create a new IAM user and enter the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY env variables`)
-                console.log(`for more info check out https://github.com/gkpty/torus_cms`);
+                console.log(`please create a new IAM user and enter the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY env variables`);
                 (async () => {
                     await open('https://console.aws.amazon.com/iam/home?region=us-east-1#/users$new?step=details');
                 })();
@@ -107,6 +132,13 @@ function iam(){
                 stmt3();
         }
     });
+}
+
+//welcome the user
+function welcome(){
+    console.log('Hello, welcome to Arjan!');
+    console.log(arjan);
+    createIam();
 }
 
 function stmt5(){

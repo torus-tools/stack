@@ -1,9 +1,17 @@
+//load files from the .env file
+require('dotenv').config();
+
+// Load the AWS SDK for Node.js
+var AWS = require('aws-sdk');
+
 const path = require("path");
 const fs = require('fs');
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 
+
 exports.script = function websiteScript(domainName) {
+	console.log('hello');
 	const publicPolicy = (
 		`{
 		"Version": "2012-10-17",
