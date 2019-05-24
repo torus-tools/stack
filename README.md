@@ -18,7 +18,7 @@ Arjan is a CLI that helps you deploy resources in a practical way that makes bui
 - Email endpoint
   - Add gmail account
   - Validate email with SES account
-- unctions
+- Functions
   - Deploy lambda function from template
   - Deploy lambda function from a file
 - Database
