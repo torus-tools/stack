@@ -5,10 +5,14 @@ require('dotenv').config();
 var AWS = require('aws-sdk');
 
 var acm = new AWS.ACM({apiVersion: '2015-12-08'});
+route53 = new AWS.Route53({apiVersion: '2013-04-01'});
+
+// interact with fs
+const fs = require('fs');
 
 exports.script = function getCert(domain) {
   var params = {
-    DomainName: `*.${domain}`, /* required */
+    DomainName: domain, /* required */
     DomainValidationOptions: [
       {
         DomainName: domain,
@@ -20,7 +24,7 @@ exports.script = function getCert(domain) {
     //  CertificateTransparencyLoggingPreference: ENABLED | DISABLED
     //},
     SubjectAlternativeNames: [
-      domain,
+      `*.${domain}`,
     ],
     ValidationMethod: 'DNS'
   };
@@ -42,6 +46,7 @@ exports.script = function getCert(domain) {
           const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
           console.log(cName);
           console.log(cValue);
+          let rawdata = fs.readFileSync('variables.json');
           obj = JSON.parse(rawdata);
           var hostedZone = obj.hostedZoneId;
           //route 53 add CNAME record
@@ -78,5 +83,5 @@ exports.script = function getCert(domain) {
         }            
       });
     }
-  });
+  });  
 }

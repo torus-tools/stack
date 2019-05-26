@@ -123,6 +123,7 @@ function certify() {
         if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domainName)) {
             console.log("Valid Domain Name");
             addVars('public_site', domainName);
+            let rawdata = fs.readFileSync('variables.json');
             obj = JSON.parse(rawdata);
             var hostedZone = obj.hostedZoneId;
             if(!hostedZone){
