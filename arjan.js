@@ -9,11 +9,12 @@ var AWS = require('aws-sdk');
 
 // Load the other scripts
 var websiteScript = require('./website-script');
+var getCert = require('./certificate-script');
 
 // Create S3 service objects
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
-var iam = new AWS.IAM({apiVersion: '2010-05-08'});
+//var iam = new AWS.IAM({apiVersion: '2010-05-08'});
 //var lambda = new AWS.Lambda({apiVersion: '2015-03-31'});
 //var apigateway = new AWS.APIGateway({apiVersion: '2015-07-09'});
 
@@ -60,6 +61,7 @@ function logOptions() {
     console.log('create-static-site');
     console.log('create-www-reroute');
     console.log('create-cloudfront');
+    console.log('request-certificate');
     stmt1();
 }
 
@@ -106,11 +108,51 @@ function stmt1(){
             case 'create-static-site':
                 createStaticSite();
                 break;
+            case 'request-certificate':
+                certify();
+                break;
             default:
                 console.log('please enter a valid yes/no response');
                 stmt1();
         }
     });
+}
+
+function certify() {
+    readline.question(`Please enter the root domain you want to get a certificate for `, (domainName) => {
+        if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domainName)) {
+            console.log("Valid Domain Name");
+            addVars('public_site', domainName);
+            obj = JSON.parse(rawdata);
+            var hostedZone = obj.hostedZoneId;
+            if(!hostedZone){
+                route53.listHostedZones(function(err, data) {
+                    if (err) {
+                        console.log(err, err.stack); // an error occurred
+                    }
+                    else {
+                        console.log(data);
+                        addHostedZone(domainName)
+                    }     
+                });              
+            }
+            else {
+                getCert.script(domainName);
+            }
+        } 
+        else {
+            console.log("Enter Valid Domain Name");
+            siteFunc();
+        }
+    });
+}
+
+function addHostedZone(domainName) {
+    readline.question(`please enter the ID of your hosted zone `, (hostedZone) => {
+        addVars('hostedZoneId', hostedZone);
+        getCert.script(domainName);
+
+    })
 }
 
 //create the IAM role

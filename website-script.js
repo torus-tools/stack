@@ -9,6 +9,15 @@ const fs = require('fs');
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 
+// ADD THE VALUES TO THE VARIABLES.JSON FILE
+function addVars(jsonVar, jsonVal){
+	let rawdata = fs.readFileSync('variables.json');  
+	obj = JSON.parse(rawdata);
+	obj[jsonVar] = jsonVal;
+	jsonObj = JSON.stringify(obj);
+	fs.writeFileSync('variables.json', jsonObj);
+	console.log('variable saved.')
+}
 
 exports.script = function websiteScript(domainName) {
 	console.log('hello');
@@ -167,7 +176,7 @@ exports.script = function websiteScript(domainName) {
 											console.log('In your Domain name registrar, please change your DNS settings to custom DNS and add the following Nameservers:')
 											console.log(data.DelegationSet.NameServers);
 											const hosted_id = data.HostedZone.Id.slice(data.HostedZone.Id.lastIndexOf('/') + 1);
-
+											addVars('hostedZoneId', hosted_id);
 
 											// Create the Alias A record for the root bucket
 											var aliasParams = {
