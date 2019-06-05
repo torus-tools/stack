@@ -8,13 +8,16 @@ var AWS = require('aws-sdk');
 // Currently loading from env file
 
 // Load the other scripts
+var addVars = require('./general')
 var websiteScript = require('./website-script');
-var getCert = require('./certificate-script');
+var getHostedZoneId = require('./get-hosted-zone');
+var createCertificate = require('./certificate-script');
+
 
 // Create S3 service objects
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
-//var iam = new AWS.IAM({apiVersion: '2010-05-08'});
+var iam = new AWS.IAM({apiVersion: '2010-05-08'});
 //var lambda = new AWS.Lambda({apiVersion: '2015-03-31'});
 //var apigateway = new AWS.APIGateway({apiVersion: '2015-07-09'});
 
@@ -45,23 +48,14 @@ function convertInput(input) {
     return output;
 }
 
-// ADD THE VALUES TO THE VARIABLES.JSON FILE
-function addVars(jsonVar, jsonVal){
-    let rawdata = fs.readFileSync('variables.json');  
-    obj = JSON.parse(rawdata);
-    obj[jsonVar] = jsonVal;
-    jsonObj = JSON.stringify(obj);
-    fs.writeFileSync('variables.json', jsonObj);
-    console.log('variable saved.')
-}
-
 //list the CLI options
 function logOptions() {
     console.log('What would you like to do next?');
     console.log('create-static-site');
     console.log('create-www-reroute');
     console.log('create-cloudfront');
-    console.log('request-certificate');
+    console.log('create-certificate');
+    console.log('shit')
     stmt1();
 }
 
@@ -108,52 +102,14 @@ function stmt1(){
             case 'create-static-site':
                 createStaticSite();
                 break;
-            case 'request-certificate':
-                certify();
+            case 'create-certificate':
+                createCert();
                 break;
             default:
                 console.log('please enter a valid yes/no response');
                 stmt1();
         }
     });
-}
-
-function certify() {
-    readline.question(`Please enter the root domain you want to get a certificate for `, (domainName) => {
-        if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domainName)) {
-            console.log("Valid Domain Name");
-            addVars('public_site', domainName);
-            let rawdata = fs.readFileSync('variables.json');
-            obj = JSON.parse(rawdata);
-            var hostedZone = obj.hostedZoneId;
-            if(!hostedZone){
-                route53.listHostedZones(function(err, data) {
-                    if (err) {
-                        console.log(err, err.stack); // an error occurred
-                    }
-                    else {
-                        console.log(data);
-                        addHostedZone(domainName)
-                    }     
-                });              
-            }
-            else {
-                getCert.script(domainName);
-            }
-        } 
-        else {
-            console.log("Enter Valid Domain Name");
-            siteFunc();
-        }
-    });
-}
-
-function addHostedZone(domainName) {
-    readline.question(`please enter the ID of your hosted zone `, (hostedZone) => {
-        addVars('hostedZoneId', hostedZone);
-        getCert.script(domainName);
-
-    })
 }
 
 //create the IAM role
@@ -201,7 +157,7 @@ function createStaticSite() {
     readline.question(`Please enter the domain name of your site ex. yourdomain.com `, (domainName) => {
         if (/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domainName)) {
             console.log("Valid Domain Name");
-            addVars('public_site', domainName, 'variables.json');
+            addVars.script('public_site', domainName);
             websiteScript.script(domainName);
         } 
         else {
@@ -209,6 +165,15 @@ function createStaticSite() {
             siteFunc();
         }
     });
+}
+
+function createCert() {
+    readline.question(`Please enter the domain name which youd like to get the certificate for`, (domainName) => {
+        getHostedZoneId.script(domainName, function(){
+            createCertificate.script(domainName)
+        });
+        readline.close();
+    });    
 }
 
 welcome();
