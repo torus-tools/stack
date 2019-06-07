@@ -107,6 +107,9 @@ exports.script = function cloudFrontDist(domain) {
             Items: [
             ]
         },
+        //DEFAULT ROOT OBJECT SET TO index.html BY DEFAULT
+        DefaultRootObject: 'index.html',
+        //HttpVersion: 'http2',
         PriceClass: 'PriceClass_All',
         Restrictions: {
             GeoRestriction: { /* required */
