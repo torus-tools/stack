@@ -10,6 +10,7 @@ var AWS = require('aws-sdk');
 // Load the other scripts
 var addVars = require('./general')
 var websiteScript = require('./website-script');
+var createCloudFront = require('./cloudfront-script');
 var getHostedZoneId = require('./get-hosted-zone');
 var createCertificate = require('./certificate-script');
 
@@ -102,6 +103,9 @@ function stmt1(){
             case 'create-static-site':
                 createStaticSite();
                 break;
+            case 'create-cloudfront':
+                cloudFront();
+                break;
             case 'create-certificate':
                 createCert();
                 break;
@@ -167,6 +171,13 @@ function createStaticSite() {
     });
 }
 
+function cloudFront() {
+    readline.question(`Please enter the domain name which youd like to create the distribution for`, (domainName) => {
+        createCloudFront.script(domainName);
+        readline.close();
+    }); 
+}
+
 function createCert() {
     readline.question(`Please enter the domain name which youd like to get the certificate for`, (domainName) => {
         getHostedZoneId.script(domainName, function(){
@@ -175,6 +186,7 @@ function createCert() {
         readline.close();
     });    
 }
+
 
 welcome();
 

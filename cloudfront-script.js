@@ -10,9 +10,12 @@ const fs = require('fs');
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 var cloudfront = new AWS.CloudFront({apiVersion: '2018-11-05'});
 
-const uniqNow = uniqNow = Math.floor(Math.random() * 900000000000000000).toString(28) + new Date().toISOString().replace(":","-").replace(":","-").replace(".","-") + Math.floor(Math.random() * 90000000).toString(28);
+const uniqNow = Math.floor(Math.random() * 900000000000000000).toString(28) + new Date().toISOString().replace(":","-").replace(":","-").replace(".","-") + Math.floor(Math.random() * 90000000).toString(28);
 
-exports.script = function cloudFrontDist(domain, digicert) {
+exports.script = function cloudFrontDist(domain) {
+    let rawdata = fs.readFileSync('variables.json');
+    obj = JSON.parse(rawdata);
+    var digicert = obj.certificateArn;
     var params = {
         DistributionConfig: {
             CallerReference: uniqNow, /* required */
@@ -39,7 +42,7 @@ exports.script = function cloudFrontDist(domain, digicert) {
                     ]
                 }
             },
-            MinTTL: 31536000, /* required */
+            MinTTL: 0, /* required */
             TargetOriginId: `s3-${domain}`, /* required */
             TrustedSigners: { /* required */
                 Enabled: false, /* required */
@@ -126,7 +129,9 @@ exports.script = function cloudFrontDist(domain, digicert) {
             console.log(err, err.stack);
         }
         else {
-            console.log(data); 
+            console.log(data);
+            console.log('cloudFront distribution created succesfully.') 
+            // INSERT FUNCTION THAT REPLACES RECORD SETS IN THE HOSTED ZONE FOR CLOUDFRONT RECORDS.
         }   
     });
 }

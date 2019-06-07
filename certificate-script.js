@@ -12,7 +12,7 @@ const fs = require('fs');
 
 //import general functions
 var addVars = require('./general');
-var getHostedZoneId = require('./get-hosted-zone');
+//var getHostedZoneId = require('./get-hosted-zone');
 
 exports.script = function getCert(domain) {
   var params = {
@@ -48,6 +48,9 @@ exports.script = function getCert(domain) {
           console.log(err, err.stack); // an error occurred
         }
         else {
+
+          // INSERT IMPLICIT WAIT FOR 5 SECONDS
+
           const cName = data.Certificate.DomainValidationOptions[0].ResourceRecord.Name;
           const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
           console.log(cName);
@@ -85,6 +88,31 @@ exports.script = function getCert(domain) {
               else {
                 console.log(data); // successful response
                 console.log('succesfully created the certificate.')
+                // WAIT FOR CERTIFICATE TO BE VALIDATED
+                var params = {
+                  CertificateArn: obj.certificateArn /* required */
+                };
+                acm.waitFor('certificateValidated', params, function(err, data) {
+                  if (err) {
+                    console.log(err, err.stack); // an error occurred
+                  }
+                  else { 
+                    console.log(data);
+                    console.log('certificate validated')
+                    // GET THE CERTIFICATE
+                    var params = {
+                      CertificateArn: obj.certificateArn /* required */
+                    };
+                    acm.describeCertificate(params, function(err, data) {
+                      if (err) {
+                        console.log(err, err.stack); // an error occurred
+                      }
+                      else {
+                        console.log(data);
+                        }
+                    });
+                  }           
+                });
               }
             });
           }
