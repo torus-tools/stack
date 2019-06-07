@@ -10,6 +10,8 @@ const fs = require('fs');
 route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 var cloudfront = new AWS.CloudFront({apiVersion: '2018-11-05'});
 
+var addVars = require('./general');
+
 const uniqNow = Math.floor(Math.random() * 900000000000000000).toString(28) + new Date().toISOString().replace(":","-").replace(":","-").replace(".","-") + Math.floor(Math.random() * 90000000).toString(28);
 
 exports.script = function cloudFrontDist(domain) {
@@ -130,8 +132,86 @@ exports.script = function cloudFrontDist(domain) {
         }
         else {
             console.log(data);
+            addVars('cloudFrontDistId', data.Distribution.Id)
+            addVars('cloudFrontDomainName', data.Distribution.DomainName)
             console.log('cloudFront distribution created succesfully.') 
-            // INSERT FUNCTION THAT REPLACES RECORD SETS IN THE HOSTED ZONE FOR CLOUDFRONT RECORDS.
+            //FUNCTION THAT WAITS FOR DEPLOYED STATUS OF THE DISTRIBUTION
+            /*
+            var params = {
+                Id: data.Distribution.Id 
+            };
+            cloudfront.waitFor('distributionDeployed', params, function(err, data) {
+                if (err) {
+                    console.log(err, err.stack);
+                } 
+                else {
+                    // WAIT COMPLETE 
+                    console.log(data);
+                    var params = {
+                        ChangeBatch: {
+                            Changes: [
+                                {
+                                    Action: "CREATE", 
+                                    ResourceRecordSet: {
+                                        Name: domain,
+                                        Type: 'A',
+                                        ResourceRecords: [],
+                                        AliasTarget:
+                                        { 
+                                            HostedZoneId: obj.hostedZoneId,
+                                            DNSName: data.Distribution.DomainName,
+                                            EvaluateTargetHealth: false 
+                                        }
+                                    }
+                                }
+                            ], 
+                            Comment: `alias target for ${domain}`
+                        }, 
+                        HostedZoneId: obj.hostedZoneId
+                    };
+                    route53.changeResourceRecordSets(params, function(err, data) {
+                        if (err) {
+                            console.log(err, err.stack);
+                        }
+                        else {
+                            console.log(data);
+                            //CHANGE THE WWW RECORD SET
+                            var params = {
+                                ChangeBatch: {
+                                    Changes: [
+                                        {
+                                            Action: "CREATE", 
+                                            ResourceRecordSet: {
+                                                Name: `www.${domain}`,
+                                                Type: 'A',
+                                                ResourceRecords: [],
+                                                AliasTarget:
+                                                { 
+                                                    HostedZoneId: obj.hostedZoneId,
+                                                    DNSName: data.Distribution.DomainName,
+                                                    EvaluateTargetHealth: false 
+                                                }
+                                            }
+                                        }
+                                    ], 
+                                    Comment: `alias target for www.${domain}`
+                                }, 
+                                HostedZoneId: obj.hostedZoneId
+                            };
+                            route53.changeResourceRecordSets(params, function(err, data) {
+                                if (err) {
+                                    console.log(err, err.stack);
+                                }
+                                else {
+                                    console.log(data);
+                                    console.log('succesfully changed the recordsets to point to cloudfront')
+                                }
+                            });
+                        }
+                    });
+                }          
+            });
+            */
         }   
     });
 }

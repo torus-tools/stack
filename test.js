@@ -14,11 +14,11 @@ var acm = new AWS.ACM({apiVersion: '2015-12-08'});
 const fs = require('fs');
 
 var params = {
-    Id: 'E3RIOXGK86XS52' /* required */
-  };
-  cloudfront.getDistribution(params, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
-  });
+  HostedZoneId: 'Z3HJLEA7MRMASY', /* required */
+};
+route53.listResourceRecordSets(params, function(err, data) {
+  if (err) console.log(err, err.stack); // an error occurred
+  else     console.log(data);           // successful response
+});
   
 
