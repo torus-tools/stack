@@ -48,78 +48,79 @@ exports.script = function getCert(domain) {
           console.log(err, err.stack); // an error occurred
         }
         else {
-
-          // INSERT IMPLICIT WAIT FOR 5 SECONDS
-
-          const cName = data.Certificate.DomainValidationOptions[0].ResourceRecord.Name;
-          const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
-          console.log(cName);
-          console.log(cValue);
-          let rawdata = fs.readFileSync('variables.json');
-          obj = JSON.parse(rawdata);
-          if(obj.hostedZoneId){
-            var hostedZone = obj.hostedZoneId;
-            //route 53 add CNAME record
-            var params = {
-              ChangeBatch: {
-              Changes: [
-                  {
-                Action: "CREATE", 
-                ResourceRecordSet: {
-                  Name: cName, 
-                  ResourceRecords: [
-                    {
-                    Value: cValue
-                  }
-                  ], 
-                  TTL: 300, 
-                  Type: "CNAME"
-                }
-                }
-              ], 
-              Comment: "CNAME record for the AWS ACM certificate"
-              }, 
-              HostedZoneId: hostedZone
-            };
-            route53.changeResourceRecordSets(params, function(err, data) {
-              if (err) {
-                console.log(err, err.stack); // an error occurred
-              } 
-              else {
-                console.log(data); // successful response
-                console.log('succesfully created the certificate.')
-                // WAIT FOR CERTIFICATE TO BE VALIDATED
+          setTimeout(
+            function createCert() {
+              const cName = data.Certificate.DomainValidationOptions[0].ResourceRecord.Name;
+              const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
+              console.log(cName);
+              console.log(cValue);
+              let rawdata = fs.readFileSync('variables.json');
+              obj = JSON.parse(rawdata);
+              if(obj.hostedZoneId){
+                var hostedZone = obj.hostedZoneId;
+                //route 53 add CNAME record
                 var params = {
-                  CertificateArn: obj.certificateArn /* required */
+                  ChangeBatch: {
+                  Changes: [
+                      {
+                    Action: "CREATE", 
+                    ResourceRecordSet: {
+                      Name: cName, 
+                      ResourceRecords: [
+                        {
+                        Value: cValue
+                      }
+                      ], 
+                      TTL: 300, 
+                      Type: "CNAME"
+                    }
+                    }
+                  ], 
+                  Comment: "CNAME record for the AWS ACM certificate"
+                  }, 
+                  HostedZoneId: hostedZone
                 };
-                acm.waitFor('certificateValidated', params, function(err, data) {
+                route53.changeResourceRecordSets(params, function(err, data) {
                   if (err) {
                     console.log(err, err.stack); // an error occurred
-                  }
-                  else { 
-                    console.log(data);
-                    console.log('certificate validated')
-                    // GET THE CERTIFICATE
+                  } 
+                  else {
+                    console.log(data); // successful response
+                    console.log('succesfully created the certificate.')
+                    console.log('Please wait for your certificate to be validated.')
+                    // WAIT FOR CERTIFICATE TO BE VALIDATED
                     var params = {
                       CertificateArn: obj.certificateArn /* required */
                     };
-                    acm.describeCertificate(params, function(err, data) {
+                    acm.waitFor('certificateValidated', params, function(err, data) {
                       if (err) {
                         console.log(err, err.stack); // an error occurred
                       }
-                      else {
+                      else { 
                         console.log(data);
-                        }
+                        console.log('certificate validated')
+                        // GET THE CERTIFICATE
+                        var params = {
+                          CertificateArn: obj.certificateArn /* required */
+                        };
+                        acm.describeCertificate(params, function(err, data) {
+                          if (err) {
+                            console.log(err, err.stack); // an error occurred
+                          }
+                          else {
+                            console.log(data);
+                            }
+                        });
+                      }           
                     });
-                  }           
+                  }
                 });
               }
-            });
-          }
-          else {
-            console.log('There was an error. please try again.')
-          } 
-        }           
+              else {
+                console.log('There was an error. please try again.')
+              }
+            }, 5000); 
+          }           
       });    
     }
   });  
