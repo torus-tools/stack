@@ -48,80 +48,101 @@ exports.script = function getCert(domain) {
           console.log(err, err.stack); // an error occurred
         }
         else {
-          setTimeout(
-            function createCert() {
-              const cName = data.Certificate.DomainValidationOptions[0].ResourceRecord.Name;
-              const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
-              console.log(cName);
-              console.log(cValue);
-              let rawdata = fs.readFileSync('variables.json');
-              obj = JSON.parse(rawdata);
-              if(obj.hostedZoneId){
-                var hostedZone = obj.hostedZoneId;
-                //route 53 add CNAME record
-                var params = {
-                  ChangeBatch: {
-                  Changes: [
-                      {
-                    Action: "CREATE", 
-                    ResourceRecordSet: {
-                      Name: cName, 
-                      ResourceRecords: [
-                        {
-                        Value: cValue
-                      }
-                      ], 
-                      TTL: 300, 
-                      Type: "CNAME"
-                    }
-                    }
-                  ], 
-                  Comment: "CNAME record for the AWS ACM certificate"
-                  }, 
-                  HostedZoneId: hostedZone
-                };
-                route53.changeResourceRecordSets(params, function(err, data) {
-                  if (err) {
-                    console.log(err, err.stack); // an error occurred
-                  } 
-                  else {
-                    console.log(data); // successful response
-                    console.log('succesfully created the certificate.')
-                    console.log('Please wait for your certificate to be validated.')
-                    // WAIT FOR CERTIFICATE TO BE VALIDATED
-                    var params = {
-                      CertificateArn: obj.certificateArn /* required */
-                    };
-                    acm.waitFor('certificateValidated', params, function(err, data) {
-                      if (err) {
-                        console.log(err, err.stack); // an error occurred
-                      }
-                      else { 
-                        console.log(data);
-                        console.log('certificate validated')
-                        // GET THE CERTIFICATE
-                        var params = {
-                          CertificateArn: obj.certificateArn /* required */
-                        };
-                        acm.describeCertificate(params, function(err, data) {
-                          if (err) {
-                            console.log(err, err.stack); // an error occurred
-                          }
-                          else {
-                            console.log(data);
-                            }
-                        });
-                      }           
-                    });
-                  }
-                });
+          if(data.Certificate.DomainValidationOptions[0]){
+            console.log(data);
+            createCert(data)
+          }
+          else{
+            let rawdata = fs.readFileSync('variables.json');
+            obj = JSON.parse(rawdata);
+            var params = {
+              CertificateArn: obj.certificateArn /* required */
+            };
+            acm.describeCertificate(params, function(err, data) {
+              if (err) {
+                console.log(err, err.stack); // an error occurred
               }
               else {
-                console.log('There was an error. please try again.')
+                console.log(data);
+                createCert(data);
               }
-            }, 5000); 
-          }           
-      });    
+            });
+          }
+        }
+      });  
     }
-  });  
+  });
+}        
+                    
+function createCert(data) {
+  const cName = data.Certificate.DomainValidationOptions[0].ResourceRecord.Name;
+  const cValue = data.Certificate.DomainValidationOptions[0].ResourceRecord.Value;
+  console.log(cName);
+  console.log(cValue);
+  let rawdata = fs.readFileSync('variables.json');
+  obj = JSON.parse(rawdata);
+  if(obj.hostedZoneId){
+    var hostedZone = obj.hostedZoneId;
+    //route 53 add CNAME record
+    var params = {
+      ChangeBatch: {
+      Changes: [
+          {
+        Action: "CREATE", 
+        ResourceRecordSet: {
+          Name: cName, 
+          ResourceRecords: [
+            {
+            Value: cValue
+          }
+          ], 
+          TTL: 300, 
+          Type: "CNAME"
+        }
+        }
+      ], 
+      Comment: "CNAME record for the AWS ACM certificate"
+      }, 
+      HostedZoneId: hostedZone
+    };
+    route53.changeResourceRecordSets(params, function(err, data) {
+      if (err) {
+        console.log(err, err.stack); // an error occurred
+      } 
+      else {
+        console.log(data); // successful response
+        console.log('succesfully created the certificate.')
+        console.log('Please wait for your certificate to be validated.')
+        // WAIT FOR CERTIFICATE TO BE VALIDATED
+        var params = {
+          CertificateArn: obj.certificateArn /* required */
+        };
+        acm.waitFor('certificateValidated', params, function(err, data) {
+          if (err) {
+            console.log(err, err.stack); // an error occurred
+          }
+          else { 
+            console.log(data);
+            console.log('certificate validated')
+            // GET THE CERTIFICATE
+            var params = {
+              CertificateArn: obj.certificateArn /* required */
+            };
+            acm.describeCertificate(params, function(err, data) {
+              if (err) {
+                console.log(err, err.stack); // an error occurred
+              }
+              else {
+                console.log(data);
+                }
+            });
+          }           
+        });
+      }
+    });
+  }
+  else {
+    console.log('There was an error. please try again.')
+  }
 }
+

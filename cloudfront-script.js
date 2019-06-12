@@ -139,9 +139,9 @@ exports.script = function cloudFrontDist(domain) {
             }
             else {
                 console.log(data);
-                addVars('cloudFrontDistId', data.Distribution.Id)
-                addVars('cloudFrontDomainName', data.Distribution.DomainName)
-                console.log('cloudFront distribution created succesfully.') 
+                addVars.script('cloudFrontDistId', data.Distribution.Id);
+                addVars.script('cloudFrontDomainName', data.Distribution.DomainName);
+                console.log('cloudFront distribution created succesfully.'); 
                 //FUNCTION THAT WAITS FOR DEPLOYED STATUS OF THE DISTRIBUTION
                 var params = {
                     Id: data.Distribution.Id 

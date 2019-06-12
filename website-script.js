@@ -113,7 +113,8 @@ exports.script = function websiteScript(domainName) {
 							}
 							else if(fext =='mp4'){
 									content_type = 'video/mp4'
-							}        
+							}
+							console.log(stat);        
 							let fileParams = {Bucket: bucketName, Key: bucketPath, Body: fs.readFileSync(filePath), ContentType: content_type};
 							s3.putObject(fileParams, function(err, data) {
 								if (err) {

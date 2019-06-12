@@ -163,6 +163,7 @@ function createStaticSite() {
             console.log("Valid Domain Name");
             addVars.script('public_site', domainName);
             websiteScript.script(domainName);
+            readline.close();
         } 
         else {
             console.log("Enter Valid Domain Name");
