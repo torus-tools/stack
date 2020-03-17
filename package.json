@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gkpty/arjan.git"
+    "url": "git+https://github.com/gkpty/arjan-deploy.git"
   },
   "keywords": [
     "CLI",
@@ -18,12 +18,11 @@
   "author": "Torus",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gkpty/arjan/issues"
+    "url": "https://github.com/gkpty/arjan-deploy/issues"
   },
-  "homepage": "https://github.com/gkpty/arjan#readme",
+  "homepage": "https://github.com/gkpty/arjan-deploy#readme",
   "dependencies": {
     "aws-sdk": "^2.459.0",
-    "dotenv": "^8.0.0",
-    "open": "^6.3.0"
+    "dotenv": "^8.0.0"
   }
 }
