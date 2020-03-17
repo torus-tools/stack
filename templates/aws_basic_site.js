@@ -75,24 +75,24 @@ module.exports = function genTemplate(domain, index, error){
             "RecordSets" : [ 
               {
                 "AliasTarget" : {
-                  "DNSName" : DnsName,
+                  "DNSName" : `s3-website-${process.env.AWS_REGION}.amazonaws.com`,
                   "HostedZoneId" : {"Ref": "HostedZone"}
                 },
                 "Comment" : "Record for root bucket",
                 "HostedZoneId" : {"Ref": "HostedZone"},
                 "Name" : {"Ref":"RootBucket"},
-                "Region" : AWSRegion,
+                "Region" : process.env.AWS_REGION,
                 "Type" : "A"
               },
               {
                 "AliasTarget" : {
-                  "DNSName" : WwwDnsName,
+                  "DNSName" : `s3-website-${process.env.AWS_REGION}.amazonaws.com`,
                   "HostedZoneId" : {"Ref": "HostedZone"}
                 },
                 "Comment" : "Record for www bucket",
                 "HostedZoneId" : {"Ref": "HostedZone"},
                 "Name" : {"Ref":"WwwBucket"},
-                "Region" : AWSRegion,
+                "Region" : process.env.AWS_REGION,
                 "Type" : "A"
               }
             ]
