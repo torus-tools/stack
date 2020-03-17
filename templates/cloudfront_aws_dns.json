@@ -35,7 +35,7 @@
       "WwwBucket": {
           "Type": "AWS::S3::Bucket",
           "Properties": {
-            "BucketName": {"Fn::Join" : ["www.", { "Ref" : "RootBucket" }]}},
+            "BucketName": {"Fn::Join" : ["www.", { "Ref" : "RootBucket" }]},
             "WebsiteConfiguration": {
               "RedirectAllRequestsTo": {
                 "HostName" : {
@@ -129,13 +129,10 @@
               },
               "DefaultRootObject" : index.html,
               "Enabled" : true,
-              "IPV6Enabled" : Boolean,
-              "Logging" : Logging,
               "Origins" : [
                 {
-                  "DomainName" : {"Fn::Join" : [{ "Ref" : "RootBucket" }, ".s3.amazonaws.com"]},,
+                  "DomainName" : {"Fn::Join" : [{ "Ref" : "RootBucket" }, ".s3.amazonaws.com"]},
                   "Id" : {"Fn::Join" : ["s3-", { "Ref" : "RootBucket" }]},
-                  "OriginPath" : String,
                   "S3OriginConfig" : {
                     "OriginAccessIdentity" : ""
                   }
@@ -170,4 +167,5 @@
               "CfDistribution"
           ]
       }
+    }
 }
