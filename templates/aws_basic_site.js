@@ -1,4 +1,4 @@
-module.exports = function genTemplate(DomainName, index, error){
+module.exports = function genTemplate(domain, index, error){
   if(!index){
     index = 'index.html'
   }
@@ -13,7 +13,7 @@ module.exports = function genTemplate(DomainName, index, error){
           "Type": "AWS::S3::Bucket",
           "Properties": {
             "AccesControl": "PublicRead",
-            "BucketName": DomainName,
+            "BucketName": domain,
             "WebsiteConfiguration": {
               "ErrorDocument" : error,
               "IndexDocument" : index
@@ -65,9 +65,43 @@ module.exports = function genTemplate(DomainName, index, error){
             },
             "Name" : { "Ref" : "RootBucket" }
           }
+      },
+      "RecordSet": {
+        "Type": "AWS::Route53::RecordSetGroup",
+        "Properties": {
+            "HostedZoneId": {
+                "Ref": "HostedZone"
+            },
+            "RecordSets" : [ 
+              {
+                "AliasTarget" : {
+                  "DNSName" : DnsName,
+                  "HostedZoneId" : {"Ref": "HostedZone"}
+                },
+                "Comment" : "Record for root bucket",
+                "HostedZoneId" : {"Ref": "HostedZone"},
+                "Name" : {"Ref":"RootBucket"},
+                "Region" : AWSRegion,
+                "Type" : "A"
+              },
+              {
+                "AliasTarget" : {
+                  "DNSName" : WwwDnsName,
+                  "HostedZoneId" : {"Ref": "HostedZone"}
+                },
+                "Comment" : "Record for www bucket",
+                "HostedZoneId" : {"Ref": "HostedZone"},
+                "Name" : {"Ref":"WwwBucket"},
+                "Region" : AWSRegion,
+                "Type" : "A"
+              }
+            ]
+        },
+        "DependsOn": [
+            "HostedZone"
+        ]
       }
-    }
-      
+    }    
   }
   return template;
 }
