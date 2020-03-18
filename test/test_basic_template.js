@@ -3,4 +3,4 @@ var validateTemplate = require('./validateTemplate')
 
 let template = generateTemplate('gkpty.com', 'index.html', false)
 
-validateTemplate(JSON.stringify(template))
+validateTemplate(JSON.stringify("gkpty.com", template))

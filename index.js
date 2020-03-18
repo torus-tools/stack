@@ -1,3 +1,6 @@
-var {initBuild} = require('./lib/init');
+var generateTemplate = require('./lib/generateCloudformationTemplate')
+var deployTemplate = require('././lib/deployBasicTemplate')
 
-initBuild('us-east-1', 'default');
+let template = generateTemplate('gkpty.com', 'index.html', false)
+
+deployTemplate('gkpty.com', JSON.stringify(template))
