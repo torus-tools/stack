@@ -1,9 +1,4 @@
 var generateTemplate = require('../lib/generateTemplate')
 var validateTemplate = require('./validateTemplate')
 
-async function test(){
-  await generateTemplate('supereasyforms.com', 'index.html','error.html', true, true, true)
-  await console.log(console.log('hIPYYSJS'))
-}
-
-test()
+generateTemplate('supereasyforms.com', 'index.html','error.html', true, true, true, (err, data)=>{if(data) validateTemplate(data.template)})
