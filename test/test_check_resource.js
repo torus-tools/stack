@@ -1,7 +1,9 @@
 var checkResource = require('../lib/checkResource')
 //var validateTemplate = require('./validateTemplate')
 
-checkResource.distributionExists('supereasyforms.com', function(err, data){
-  if(err) console.log(err)
-  else console.log(data)
-})
+
+function checkstuff(){
+  checkResource.bucketExists('supereasyforms.com').then(function(err,data){console.log('hello')})
+}
+
+checkstuff()
