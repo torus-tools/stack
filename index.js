@@ -1,5 +1,5 @@
-var generateTemplate = require('./lib/generateCloudformationTemplate')
-var deployTemplate = require('././lib/deployBasicTemplate')
+var generateTemplate = require('./lib/generateTemplate')
+var deployTemplate = require('./lib/deployStack')
 
 let template = generateTemplate('gkpty.com', 'index.html', false)
 
