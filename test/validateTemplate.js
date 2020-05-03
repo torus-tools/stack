@@ -10,6 +10,6 @@ module.exports = function ValidateTemplate(templateBody){
   };
   cloudformation.validateTemplate(params, function(err, data) {
     if(err) console.log(err);
-    else console.log(data);
+    else console.log('Test Succesful');
   });
 }
