@@ -1,6 +1,3 @@
-var generateTemplate = require('../lib/generateTemplate')
-var validateTemplate = require('./validateTemplate')
+var deploySite = require('../lib/deploySite')
 
-generateTemplate('supereasyforms.com', 'index.html','error.html', true, true, true).then((data) => {
-  if(data) validateTemplate(data.template)
-})
+deploySite('supereasyforms.com', 'index.html','error.html', true, true, true)
