@@ -1,3 +1,3 @@
 var deploySite = require('../lib/deploySite')
 
-deploySite('gkpty.com', 'index.html','error.html', true, true, true)
+deploySite('arjan.tools', 'index.html','error.html', true, true, true)
