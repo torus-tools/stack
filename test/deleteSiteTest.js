@@ -1,5 +1,5 @@
 var deleteSite = require('../lib/deleteSite');
 
-deleteSite('azuerotourscomStack')
+deleteSite('gkptycomStack')
 .then((data) => console.log(data))
 .catch((err) => console.log(err))
