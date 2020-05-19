@@ -20,6 +20,7 @@ module.exports.stackExists = exists.stackExists;
 module.exports.bucketExists = exists.bucketExists;
 module.exports.distributionExists = exists.distributionExists;
 module.exports.hostedZoneExists = exists.hostedZoneExists;
+module.exports.newHostedZone = exists.newHostedZone;
 
 module.exports.deleteSite = deleteSite;
 module.exports.deploySite = deploySite;
