@@ -1,6 +1,6 @@
 const generateTemplate = require('./lib/generateTemplate');
 const deploySite = require('././lib/deploySite');
-const deleteSite = require('./lib/deleteSite');
+const {DeleteStack, DeleteCert} = require('./lib/deleteSite');
 const stack = require('./lib/deployStack');
 const certificate = require('./lib/acmCertificate');
 const exists = require('./lib/checkResource');
@@ -19,11 +19,13 @@ module.exports.importCertificate = certificate.importCertificate;
 module.exports.stackExists = exists.stackExists;
 module.exports.bucketExists = exists.bucketExists;
 module.exports.distributionExists = exists.distributionExists;
+module.exports.certificateExists = exists.certificateExists;
 module.exports.hostedZoneExists = exists.hostedZoneExists;
 module.exports.newHostedZone = exists.newHostedZone;
 
-module.exports.deleteSite = deleteSite;
-module.exports.deploySite = deploySite;
+module.exports.deleteSite = DeleteStack;
+module.exports.deleteCertificate = DeleteCert;
+//module.exports.deploySite = deploySite;
 
 module.exports.uploadFile = upload.uploadFile;
 module.exports.uploadSite = upload.uploadDir;
