@@ -13,7 +13,7 @@ module.exports.createChangeSet = stack.createChangeSet;
 module.exports.requestCertificate = certificate.requestCertificate;
 module.exports.describeCertificate = certificate.describeCertificate;
 module.exports.validateCertificate = certificate.validateCertificate;
-module.exports.createCertificate = certificate.createCertificate;
+module.exports.requestAndValidateCertificate = certificate.requestAndValidateCertificate;
 module.exports.importCertificate = certificate.importCertificate;
 
 module.exports.stackExists = exists.stackExists;
