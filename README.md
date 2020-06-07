@@ -62,9 +62,3 @@ AWS Route53 has a $0.50/month cost (6$ a year). Its a better option than a stand
 You can only use an external DNS if you include the CDN option and exclude the route53 option. If you are using an external DNS a CNAME record pointing to the root will invalidate all other records pointing to the root; so if you have other records pointing to your root, for example mail exchange (MX) records to send/receive email with your custom domain you will have to perform some additional steps.
 
 Instead of pointing the CNAME record to the root, you can point to the CNAME to the www subdomain. Then you can create a reroute or FWD record in your DNS provider console to reroute all http requests coming in to the root to the www.
-You can check out the following links to learn how to reroute requests in major DNS providers
-
-- Namecheap
-- Godaddy
-- Marcaria
-- Google domains
