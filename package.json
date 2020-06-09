@@ -1,7 +1,7 @@
 {
   "name": "arjan-deploy",
-  "version": "0.5.1",
-  "description": "a CLI tool that helps you build deploy and integrate microservices easily",
+  "version": "0.7.2",
+  "description": "Deploy static sites in AWS using cloudformation.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,10 @@
     "url": "git+https://github.com/gkpty/arjan-deploy.git"
   },
   "keywords": [
-    "CLI",
+    "static sites",
+    "jam stack",
+    "deploy",
+    "aws",
     "AWS-SDK-JS",
     "node.js"
   ],
