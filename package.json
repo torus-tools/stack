@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/gkpty/arjan-deploy#readme",
   "dependencies": {
-    "aws-sdk": "^2.459.0",
+    "aws-sdk": "^2.692.0",
     "dotenv": "^8.0.0"
   }
 }
