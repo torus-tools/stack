@@ -1,6 +1,6 @@
 {
   "name": "arjan-deploy",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "a CLI tool that helps you build deploy and integrate microservices easily",
   "main": "index.js",
   "scripts": {
