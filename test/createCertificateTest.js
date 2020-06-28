@@ -1,4 +1,4 @@
-var {requestAndValidateCertificate} = require('../lib/acmCertificate')
+/* var {requestAndValidateCertificate} = require('../lib/acmCertificate')
 require('dotenv').config();
 
-requestAndValidateCertificate('gkpty.com', 'gkptycomStack', true)
+requestAndValidateCertificate('gkpty.com', 'gkptycomStack', true) */
