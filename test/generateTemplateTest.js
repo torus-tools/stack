@@ -1,10 +1,10 @@
 var assert = require('assert');
-var fs = require("fs")
-var {createDir} = require('./../build')
-var generateTemplate = require('./../lib/generateTemplate')
-var ValidateTemplate = require('./../lib/ValidateTemplate')
+var generateTemplate = require('../lib/generateTemplate')
+//var ValidateTemplate = require('../lib/ValidateTemplate')
 //var AWS = require('aws-sdk-mock');
 
+generateTemplate('mylow.com', 'index.html', 'error.html').then(data => console.log(data))
+/*
 describe('Check the generateTemplate method', function() {
   beforeEach(function() {
     createDir("./forms")
@@ -43,4 +43,4 @@ describe('Check the generateTemplate method', function() {
       validate.should.exist()
     });
   });
-});
+}); */
