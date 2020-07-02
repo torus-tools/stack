@@ -46,23 +46,4 @@ describe('Check the generateTemplate method', function() {
       assert.equal(typeof validate, 'object')
     });
   });
-  /*
-  describe('Validates a generated cloudFromation template for a test setup', ()=>{
-    it('Should generate a test template and validate it with the AWS SDK', async () =>{ 
-      let templateBody = await generateTemplate(domain, indexDoc, errDoc, true, false, true)
-      assert.equal(typeof templateBody, "string")
-      assert.equal(templateBody.length>80? true:false, true)
-      let validate = cloudformation.validateTemplate({TemplateBody: templateBody}).promise()
-      validate.should.exist()
-    });
-  });
-  describe('Validates a generated cloudFromation template for a production setup', ()=>{
-    it('Should generate a production template and validate it with the AWS SDK', async ()=>{ 
-      let templateBody = await generateTemplate(domain, indexDoc, errDoc, true, true, true, true)
-      assert.equal(typeof templateBody, "string")
-      assert.equal(templateBody.length>160? true:false, true)
-      let validate = cloudformation.validateTemplate({TemplateBody: templateBody}).promise()
-      validate.should.exist()
-    });
-  }); */
 });
