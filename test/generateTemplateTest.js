@@ -16,7 +16,7 @@ describe('Check the generateTemplate method', function() {
      generateTemplate().catch(err => assert.equal(err.includes('invalid domain'), true))
     })
   });
-  describe('Validates a generated cloudFromation template for a dev setup', ()=>{
+  /* describe('Validates a generated cloudFromation template for a dev setup', ()=>{
     it('Should generate a basic template and validate it with the AWS SDK', async function() { 
       let temp = await generateTemplate(domain)
       let templateBody = temp.template
@@ -35,7 +35,7 @@ describe('Check the generateTemplate method', function() {
       let validate = await cloudformation.validateTemplate({TemplateBody: JSON.stringify(templateBody)}).promise().catch(err=>console.log(err))
       assert.equal(typeof validate, 'object')
     });
-  });
+  }); */
   describe('Validates a generated cloudFromation template for a prod setup', ()=>{
     it('Should generate a basic template and validate it with the AWS SDK', async function() { 
       let temp = await generateTemplate(domain, 'index.html', 'error.html', true, true, true, true)
