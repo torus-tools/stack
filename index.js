@@ -5,6 +5,7 @@ const stack = require('./lib/deployStack');
 const certificate = require('./lib/acmCertificate');
 const exists = require('./lib/checkResource');
 const upload = require('./lib/upload');
+const deleteObjects = require('./lib/deleteObjects')
 
 module.exports.generateTemplate = generateTemplate;
 module.exports.deployStack = stack.deployStack;
@@ -25,6 +26,8 @@ module.exports.newHostedZone = exists.newHostedZone;
 
 module.exports.deleteSite = DeleteStack;
 module.exports.deleteCertificate = DeleteCert;
+
+module.exports.deleteObjects = deleteObjects;
 //module.exports.deploySite = deploySite;
 
 module.exports.uploadFile = upload.uploadFile;
