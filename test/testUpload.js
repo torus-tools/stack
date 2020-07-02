@@ -1,3 +1,3 @@
-var {uploadDir} = require('../lib/upload')
+/* var {uploadDir} = require('../lib/upload')
 
-uploadDir('/', gkpty)
+uploadDir('/', gkpty) */

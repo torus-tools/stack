@@ -1,4 +1,4 @@
-//import necessary stuff
+/* //import necessary stuff
 require('dotenv').config();
 var AWS = require('aws-sdk');
 var cloudformation = new AWS.CloudFormation({apiVersion: '2010-05-15'});
@@ -12,4 +12,4 @@ module.exports = function ValidateTemplate(templateBody){
     if(err) console.log(err);
     else console.log('Test Succesful');
   });
-}
+} */
