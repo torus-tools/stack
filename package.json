@@ -1,6 +1,6 @@
 {
   "name": "arjan-deploy",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "Deploy static sites in AWS using cloudformation.",
   "main": "index.js",
   "scripts": {
