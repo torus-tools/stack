@@ -4,7 +4,7 @@
 
 # Arjan Deploy
 
-Arjan deploy is a tool that helps you deploy static websites to the AWS cloud using Cloudformation. The tool is modular and can be used with the Arjan CLI, or programmatically in your own node.js project. Arjan Deploy gives you several different options to deploy your static sites in AWS and it also helps you import existing AWS projects, or individual resources into your websites project.
+Arjan Deploy is a tool that helps you deploy static sites to the AWS cloud using Cloudformation. The tool is modular and can be used with the Arjan CLI, or programmatically in your own node.js project. Arjan Deploy gives you several different options to deploy your static sites in AWS.  Also it helps you import existing AWS projects, or individual resources into your site project.
 
 ## Why not just use the AWS SDK for JS and CloudFormation directly?
 
@@ -27,14 +27,11 @@ Generally static sites in the cloud consist of an object storage solution (i.e. 
 4. Then to update your stack to production you can run `arjan deploy DOMAIN update prod` this will add a route53 DNS, a cloudfront distribution and a verified SSL ceritifcate to your stack.
 5. alternatively you can just run `arjan deploy DOMAIN create prod` from the start.
 
-In order to deploy a production site you must have already purchased a domain from a domain name registrar and you should have their respective interface open in order to create DNS records or transfer nameservers. there are several popular options out there; we like to use namecheap because as the name suggests it, its cheap, and it also has great service.
-
-## Programmatic Usage
-
+In order to deploy a production site you must have already purchased a domain from a domain name registrar and you should have their respective interface open in order to create DNS records or transfer nameservers. There are several popular options out there; we like to use namecheap because as the name suggests it, its cheap and has great service.
 
 ## Setups
 
-For an easier development workflow we have defined some setups that include dev, test and prod (production). you can customize these by additionally providing flags.
+For an easier development workflow we have defined some setups that include Dev, Test and Prod (production). you can customize these by additionally providing flags.
 **dev → test → prod**
 
 
@@ -47,6 +44,7 @@ For an easier development workflow we have defined some setups that include dev,
 1. **CDN w/ Route53 DNS (http):** Deploys s3 bucket, route53 DNS, and a cloudfront distribution.
 2. **CDN w/ external DNS (http):** Deploys s3 bucket and a Cloudfront distribution. You must create a CNAME record (and reroute record) in your external DNS.
 3. **CDN w/ external DNS (https)**: Deploys s3 bucket and a Cloudfront distribution and creates certificates in ACM. You must create a CNAME record (and optionally a reroute record) in your external DNS.
+
 ## Route53 DNS
 
 Amazon Route 53 provides highly available and scalable Domain Name System (DNS), domain name registration, and health-checking web services. It is designed to give developers and businesses an extremely reliable and cost effective way to route end users to Internet applications by translating names like example.com into the numeric IP addresses, such as 192.0.2.1, that computers use to connect to each other.
