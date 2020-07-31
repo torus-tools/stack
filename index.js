@@ -1,6 +1,6 @@
 const generateTemplate = require('./lib/generateTemplate');
 const deploySite = require('././lib/deploySite');
-const {DeleteStack, DeleteCert} = require('./lib/deleteSite');
+const {DeleteStack, DeleteCert} = require('./lib/deleteStack');
 const stack = require('./lib/deployStack');
 const certificate = require('./lib/acmCertificate');
 const exists = require('./lib/checkResource');
