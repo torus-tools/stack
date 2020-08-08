@@ -7,10 +7,6 @@ var cloudformation = new AWS.CloudFormation({apiVersion: '2010-05-15'});
 
 const stack = {
   bucket: true,
-  www: true,
-  cdn: true,
-  dns: true,
-  https: true
 }
 
 const config = {
@@ -36,6 +32,7 @@ describe('Check the generateTemplate method', function() {
     it('Should generate a basic template and validate it with the AWS SDK', async function() { 
       let temp = await generateTemplate(domain, stack, config)
       let templateBody = temp.template
+      console.log(templateBody)
       assert.equal(typeof templateBody, "object")
       assert.equal(JSON.stringify(templateBody).length>20? true:false, true)
       let validate = await cloudformation.validateTemplate({TemplateBody: JSON.stringify(templateBody)}).promise().catch(err=>console.log(err))
