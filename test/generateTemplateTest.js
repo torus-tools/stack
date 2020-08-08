@@ -5,17 +5,24 @@ var generateTemplate = require('../lib/generateTemplate')
 var AWS = require('aws-sdk');
 var cloudformation = new AWS.CloudFormation({apiVersion: '2010-05-15'});
 
-let stack = {
+const stack = {
   bucket: true,
   www: true,
   cdn: true,
-  route53: true,
+  dns: true,
   https: true
 }
 
-let options = {
+const config = {
   index:"index.html",
-  error:"error.html"
+  error:"error.html",
+  providers: {
+    domain: 'godaddy',
+    bucket: 'aws',
+    cdn: 'aws',
+    dns: 'aws',
+    https: 'aws'
+  }
 }
 
 describe('Check the generateTemplate method', function() {
@@ -27,7 +34,7 @@ describe('Check the generateTemplate method', function() {
   });
   describe('Validates a generated cloudFromation template for a prod setup', ()=>{
     it('Should generate a basic template and validate it with the AWS SDK', async function() { 
-      let temp = await generateTemplate(domain, stack, options)
+      let temp = await generateTemplate(domain, stack, config)
       let templateBody = temp.template
       assert.equal(typeof templateBody, "object")
       assert.equal(JSON.stringify(templateBody).length>20? true:false, true)
