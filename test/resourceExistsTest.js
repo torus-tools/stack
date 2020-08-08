@@ -34,3 +34,7 @@ describe('Check the generateTemplate method', function() {
   hostedZoneExists,
   newHostedZone
 }); */
+
+const resourceExists = require('../lib/resourceExists')
+
+resourceExists.CloudFrontDist('vivesyasociados.com').then((data) => console.log(data))
