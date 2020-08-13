@@ -3,59 +3,68 @@
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://gkpty.mit-license.org)
 
 # Arjan Deploy
+A 1 command deployment solution that requires 0 knowledge, 0 effort, and most importantly 0 extra $$$.
 
-Arjan Deploy helps you deploy static websites to the AWS Cloud using Cloudformation. Arjan Deploy gives you several different options to deploy your static websites in AWS. Also it helps you import existing AWS projects, or individual resources into your websites project. The tool is modular and can be used with the Arjan CLI, or programmatically in your own node.js project. 
+It uses AWS cloudformation and the AWS javascript SDK under the hood to help you create and maintain modern infrastructure for your static sites/apps.
 
-## Static site architectures
+## Features
+- facilitates collaboration of unlimited team-members with per-stack IAM roles
+- automatically adds continous deployment with github using codepipeline
+- automatically imports any existing resources in AWS for a given domain
+- creates a single cloudformation template
+- Saves your cloudformation changesets locally
+- 99.99% SLA agreement included automatically
+- its completely open source
+- responsive community support 🙂
 
-Generally static sites in the cloud consist of an object storage solution (i.e. S3), a DNS (from your domain name provider or your cloud provider) a CDN or cache distribution network, and optionally may contain a digital certificate. Arjan Gives you options to add the following resources to your stack depending on your needs. 
+## getting started
+**Prerequisites**
+- An AWS account 
+- node and npm
+- The latest version of the Arjan CLI
 
-**root**: an s3 bucket for the root domain
-**dns**: Adds a Route53 Hosted zone to your stack. 
-**cdn**: Adds an AWS Cloudfront distribution to your sites stack. More about Cloudfront.
-**https**: creates a digital certificate for your domain with AWS ACM. If you have a route53 DNS it will automatically verify your certificate. Else you must manually verify your certificate with your DNS provider. 
-**www**: a reroute bucket for www
+To deploy a static site with a CDN and HTTPS pop up your terminal, go into your desired project `cd project_name`, and run `arjan stack create prod` 
 
-## Usage
-1. go to your project's directory `cd your_project`
-2. run `arjan init PROFILE REGION`
-3. If you want your site to be online while still in development you can run `arjan deploy DOMAIN create`
-4. Then to update your stack to production you can run `arjan deploy DOMAIN update prod` this will add a route53 DNS, a cloudfront distribution and a verified SSL ceritifcate to your stack.
-5. alternatively you can just run `arjan deploy DOMAIN create prod` from the start.
+**When using Arjan Tools you are using your own AWS account from your own machine.**
 
-In order to deploy a production site you must have already purchased a domain from a domain name registrar and you should have their respective interface open in order to create DNS records or transfer nameservers. there are several popular options out there; we like to use namecheap because as the name suggests it, its cheap, and it also has great service.
+**Any charges incurred by your websites will be billed directly from AWS to your AWS account.** 
 
-## Setups
+**Arjan Tools does NOT have any access to your AWS account/bill.**
 
+## setups
 For an easier development workflow we have defined some setups that include Dev, Test and Prod (production). You can customize these by additionally providing flags.
 **dev → test → prod**
-
 
 1. **Dev:** S3 root bucket with a public policy
 2. **Test:** S3 root bucket, www reroute bucket and a route53 hosted zone.
 3. **Prod:** CDN w/ Route53 DNS (https)**:** Deploys s3 bucket, route53 DNS, a cloudfront distribution and creates TLS certificates in AWS ACM.
 
-**Custom Setup Examples**
+## How it Works
+Arjan Deploy produces a JSON cloudformation template with your infrastructure (as code). It deploys this template using the AWS SDK and also saves it locally in the arjan_config. 
 
-1. **CDN w/ Route53 DNS (http):** Deploys s3 bucket, route53 DNS, and a cloudfront distribution.
-2. **CDN w/ external DNS (http):** Deploys s3 bucket and a Cloudfront distribution. You must create a CNAME record (and reroute record) in your external DNS.
-3. **CDN w/ external DNS (https)**: Deploys s3 bucket and a Cloudfront distribution and creates certificates in ACM. You must create a CNAME record (and optionally a reroute record) in your external DNS.
+You are free to customize the cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the arjan CLI/SDK. You can also push the arjan_config to github and enable other team-members (with permission) to collaborate on the stack. Arjan facilitates this process by creating a per-stack IAM policy that can easily be assigned to other users in AWS.
 
-## Route53 DNS
+## Static Site architecture
+Because the content in a static site doesnt have to be processed on a request basis it can be served completely from a servers cache, or a cheaper cloud based object storage solution like AWS s3. 
 
-Amazon Route 53 provides highly available and scalable Domain Name System (DNS), domain name registration, and health-checking web services. It is designed to give developers and businesses an extremely reliable and cost effective way to route end users to Internet applications by translating names like example.com into the numeric IP addresses, such as 192.0.2.1, that computers use to connect to each other.
+To have fast response times globally, https, amongst several other percs you can add a CDN (content distribution network) that fetches contet the origin (s3 bucket) and distributes it to several edge locations scattered around the globe. This places the content a lot closer to the end user and hence faster response times.
+- diagram
 
-AWS Route53 has a $0.50/month cost (6$ a year). Its a better option than a standard DNS because:
+## Pricing breakdown (from AWS)
+This is a breakdown of the costs of hosting a static site in AWS
 
-- Route 53 offers powerful routing policies to allow for efficient DNS requests.
-- You can combine your DNS with health-checking services to route traffic to healthy endpoints or to independently monitor and/or alarm on endpoints. 
-- Route 53 effectively connects user requests to infrastructure running in AWS – such as Amazon EC2 instances, Elastic Load Balancing load balancers, or Amazon S3 buckets
-- can also be used to route users to infrastructure outside of AWS.
+Let’s say your website uses CloudFront for a month (30 days), and the site has 1,000 visitors each day for that month. Each visitor clicked 1 page that returned a single object (1 request) and they did this once each day for 30 days. Turns out each request is 1MB for the amount of data transferred, so in total for the month that comes to 30,000MB or 29GB (1GB = 1,024MB). Half the requests are from the US and half are from Europe, so your monthly total for data transferred comes to $2.47. Also, each click is an HTTP request, so for the month that equals 30,000 HTTP requests, which comes to a total of $0.02 for the month. Adding the two values together, the total cost for using CloudFront for this example would be $2.49 for the month.
 
-## Using an External DNS
+- cloudfront
+  - 29GB bandwith = 2.47$
+  - 30,000 http requests = .02$
+- Route53 .50$
+- S3 5GB storage = 0.15$
+## total - 3.14$
 
-You can only use an external DNS if you include the CDN option and exclude the route53 option. If you are using an external DNS a CNAME record pointing to the root will invalidate all other records pointing to the root; so if you have other records pointing to your root, for example mail exchange (MX) records to send/receive email with your custom domain you will have to perform some additional steps.
+## Programmatic Usage
+```
+const {deployStack} = require('../lib/deployStack')
 
-Instead of pointing the CNAME record to the root, you can point to the CNAME to the www subdomain. Then you can create a reroute or FWD record in your DNS provider console to reroute all http requests coming in to the root to the www.
-
-### For more information visit the [docs](https://arjan.tools/docs)
+deployStack('testingsit.com', {bucket:true}, {index:'index.html', error:'error.html', providers:{bucket:'aws'}}, true)
+```

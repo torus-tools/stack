@@ -12,6 +12,7 @@ const stack = {
 const config = {
   index:"index.html",
   error:"error.html",
+  last_deployment:"",
   providers: {
     domain: 'godaddy',
     bucket: 'aws',
