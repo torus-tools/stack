@@ -1,3 +1,24 @@
 const {deployStack} = require('../lib/deployStack')
 
-deployStack('testingsit.com', {bucket:true}, {index:'index.html', error:'error.html', providers:{bucket:'aws'}}, true)
+const stack = {
+  bucket: true,
+  www: true,
+  dns: true,
+  cdn: false,
+  https: false
+}
+
+const config = {
+  index:"index.html",
+  error:"error.html",
+  last_deployment:"",
+  providers: {
+    domain: 'godaddy',
+    bucket: 'aws',
+    cdn: 'aws',
+    dns: 'aws',
+    https: 'aws'
+  }
+}
+
+deployStack('localizehtml.com', stack, config, true)
