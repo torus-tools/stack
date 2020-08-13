@@ -25,10 +25,11 @@
   },
   "homepage": "https://github.com/gkpty/arjan-deploy#readme",
   "dependencies": {
+    "@torus-tools/content": "0.0.1",
     "aws-sdk": "^2.692.0",
     "dotenv": "^8.0.0"
   },
   "devDependencies": {
-    "mocha": "^8.0.1"
+    "mocha": "^8.1.1"
   }
 }
