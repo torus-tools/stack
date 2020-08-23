@@ -3,7 +3,7 @@ const {deployStack} = require('../lib/deployStack')
 const stack = {
   bucket: true,
   www: true,
-  dns: true,
+  dns: false,
   cdn: true,
   https: false
 }
