@@ -1,18 +1,17 @@
-const generateTemplate = require('./lib/generateTemplate');
-const {DeleteStack, DeleteCert} = require('./lib/deleteStack');
-const stack = require('./lib/deployTemplate');
-const exists = require('./lib/resourceExists');
+const generateTemplate = require('./lib/generateTemplate')
+const {deployStack, deployParts, deployFull} = require('./lib/deployStack')
+const {deployTemplate} = require('./lib/deployTemplate')
+const deleteStack = require('./lib/deleteStack')
+const stackExists = require('./lib/stackExists')
+const resourceExists = require('./lib/resourceExists')
 
 module.exports.generateTemplate = generateTemplate;
-module.exports.deployStack = stack.deployStack;
-module.exports.createChangeSet = stack.createChangeSet;
+module.exports.deployStack = deployStack;
+module.exports.deployParts = deployParts;
+module.exports.deployFull = deployFull;
+module.exports.deployTemplate = deployTemplate;
+module.exports.deleteStack = deleteStack;
+module.exports.stackExists = stackExists;
+module.exports.resourceExists = resourceExists;
 
-module.exports.stackExists = exists.stackExists;
-module.exports.bucketExists = exists.bucketExists;
-module.exports.distributionExists = exists.distributionExists;
-module.exports.certificateExists = exists.certificateExists;
-module.exports.hostedZoneExists = exists.hostedZoneExists;
-module.exports.newHostedZone = exists.newHostedZone;
 
-module.exports.deleteSite = DeleteStack;
-module.exports.deleteCertificate = DeleteCert;

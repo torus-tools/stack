@@ -80,3 +80,62 @@ Let’s say your website uses CloudFront for a month (30 days), and the site has
 
 
 # API
+
+## stackExists(domain)
+- **description**: determines wether or not a stack exists for a given domain. If it does exist it returns the stack's ID.
+- **params**: (domain)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+- **returns**: promise(resolve, reject)
+  - **resolve**: (stackID | null)
+    - **stackID**: STRING: ID or ARN (Amazon resource number) of the existing resource
+  - **reject**: (error) 
+
+## resourceExists.resource(domain)
+- **description**: determines wether or not a particular resource exists for a given domain. If it does exist it returns the resource's ID/ARN Resources include:
+  - CloudFrontDist
+  - RootBucket
+  - HostedZone
+  - AcmCertificate
+- **params**: (domain)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+- **returns**: promise(resolve, reject)
+  - **resolve**: (ResourceID | null)
+    - **resourceID**: STRING: ID or ARN (Amazon resource number) of the existing resource
+  - **reject**: (error) 
+
+## generateTemplate(domain, stack, config, template, overwrite)
+- **description**: Generates a cloudformation template for a given domain
+- **params**: (domain, stack, config, template, overwrite)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+  - **stack**: OBJECT: REQUIRED: Contains the desired resources for the given stack with boolean values
+    ```
+      const stack = {
+      bucket: true,
+      www: true,
+      dns: true,
+      cdn: false,
+      https: false
+    }
+    ```
+  - **config**: OBJECT: REQUIRED: Stack configuration. Contains the desired providers for each resource as well as the index and error documents.
+    ```
+    const config = {
+      index:"index.html",
+      error:"error.html",
+      last_deployment:"",
+      providers: {
+        domain: 'godaddy',
+        bucket: 'aws',
+        cdn: 'aws',
+        dns: 'aws',
+        https: 'aws'
+      }
+    }
+    ```
+  - **template**: OBJECT: An existing JSON cloudformation template that you wicsh to modify
+  - **overwrite**: BOOLEAN: Set as true if you wish to overwrite the existing template with the generated template. By default, only new resources are added to the existing template.
+- **returns**: promise(resolve, reject)
+  - **resolve**: ({"template":{}, "existingResources":[]})
+    - **template**: OBJECT: the generated cloudformation template
+    - **existingResource**: ARRAY: an array of resources that exist for the given domain that should be imported into the template
+  - **reject**: (error)
