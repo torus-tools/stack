@@ -5,7 +5,7 @@ const stack = {
   www: true,
   dns: true,
   cdn: true,
-  https: false
+  https: true
 }
 
 const config = {
@@ -13,12 +13,12 @@ const config = {
   error:"error.html",
   last_deployment:"",
   providers: {
-    domain: 'godaddy',
+    domain: 'other',
     bucket: 'aws',
     cdn: 'aws',
-    dns: 'godaddy',
+    dns: 'aws',
     https: 'aws'
   }
 }
 
-deployStack('localizehtml.com', stack, config, true)
+deployStack('panamaexpedition.com', stack, config, true)
