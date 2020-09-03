@@ -21,4 +21,4 @@ const config = {
   }
 }
 
-deployStack('panamaexpedition.com', stack, config, true)
+deployStack('azuerotours.com', stack, config, true)
