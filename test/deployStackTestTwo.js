@@ -4,8 +4,8 @@ const stack = {
   bucket: true,
   www: true,
   dns: true,
-  cdn: true,
-  https: true
+  cdn: false,
+  https: false
 }
 
 const config = {
