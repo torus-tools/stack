@@ -13,7 +13,7 @@ const config = {
   error:"error.html",
   last_deployment:"",
   providers: {
-    domain: 'other',
+    domain: 'godaddy',
     bucket: 'aws',
     cdn: 'aws',
     dns: 'aws',
@@ -21,4 +21,4 @@ const config = {
   }
 }
 
-deployStack('azuerotours.com', stack, config, true)
+deployStack('localizehtml.com', stack, config, true)
