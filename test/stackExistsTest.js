@@ -1,3 +1,3 @@
-const stackExists = require('../lib/stackExists')
+const {HostedZone} = require('../lib/resourceExists')
 
-stackExists('localizehtml.com').then(data => console.log(data)).catch(err => console.log(err))
+HostedZone('azuerotours.com').then(data => console.log(data)).catch(err => console.log(err))
