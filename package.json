@@ -25,6 +25,7 @@
   "homepage": "https://github.com/torus-tools/stack#readme",
   "dependencies": {
     "@torus-tools/content": "0.0.1",
+    "@torus-tools/domains": "0.0.1",
     "aws-sdk": "^2.732.0",
     "dotenv": "^8.0.0"
   },
