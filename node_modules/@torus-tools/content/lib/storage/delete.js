@@ -5,18 +5,20 @@ async function aws(domain, files){
   var listparams = {Bucket: domain};
   let delArr = []
   if(!files || files === '/' || files === '*'){
-    let objects = await s3.listObjects(listparams).promise().catch(err => rejects(err))
+    let objects = await s3.listObjects(listparams).promise().catch(err=>{throw new Error(err)})
     for(let obj of objects.Contents) delArr.push({Key: obj.Key})
   }
-  var delparams = {
-    Bucket: domain, 
-    Delete: {
-     Objects: files?files:delArr,
-     Quiet: false
-    }
-   };
-   let delconf = await s3.deleteObjects(delparams).promise().catch()
-   return delconf
+  if(delArr.length >0){
+    var delparams = {
+      Bucket: domain, 
+      Delete: {
+        Objects: files?files:delArr,
+        Quiet: false
+      }
+    };
+    return await s3.deleteObjects(delparams).promise().catch(err=>{throw new Error(err)})
+  }
+  else return 'No objects to delete'
 }
 
 module.exports = {
