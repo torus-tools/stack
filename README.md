@@ -1,12 +1,11 @@
 # Torus Stack
 A promise-based javascript SDK that generates and deploys JSON cloudformation templates for static websites in AWS. It uses the AWS SDK to create, and execute changesets in a particular sequence that enables automation of the entire process while maintaining a short deployment time.
 
-You are free to customize the generated cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the torus stack SDK/CLI command. You can also push the arjan_config to github and enable other team-members (with permission) to collaborate on the stack. Arjan facilitates this process by creating a per-stack IAM policy that can easily be assigned to other users in AWS.
+You are free to customize the generated cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the torus stack SDK/CLI command. You can also push the arjan_config to github and enable other team-members (with permission) to collaborate on the stack.
 
 ## Features
 - Creates a single cloudformation template
 - Saves your cloudformation changesets locally
-- Creates per-stack IAM roles
 - Automatically imports existing resources for a given domain in AWS
 - Adds continous deployment with github using codepipeline
 - Completely open source
@@ -24,9 +23,9 @@ You are free to customize the generated cloudformation template or its resources
 - pop up your terminal, go into your desired project `cd project_name`, and run `arjan stack create prod`
 
 
-- **When using Arjan Tools you are using your own AWS account from your own machine.**
+- **When using Torus Tools you are using your own AWS account from your own machine.**
 - **Any charges incurred by your websites will be billed directly from AWS to your AWS account.**
-- **Arjan Tools does NOT have any access to your AWS account/bill.**
+- **Torus Tools does NOT have any access to your AWS account/bill.**
 
 
 # Architecture
@@ -47,18 +46,12 @@ For an easier development workflow we have defined some setups that include Dev,
 3. **Prod:** public S3 root bucket, www reroute bucket, route53 hosted zone, cloudfront distribution, ACM certificate
 # How it Works
 
-The Torus Stack SDK has a series of methods that take care of generating/provisioning templates as well as uploading content and executing DNS operations. The main deploysatck method generate a partial template and  a full template for your stack. The partial template contains all the desired resources excluding the CDN, ACM certificate and DNS records. Then it checks if there are any existing resources, if true it will import those exisitng resources then it will execute the deploy parts method. The deploy parts method deploys the partial stack and then calls the deploy full method. the deployFull method synchronosuly updates the nameservers, uploads content, and deploys the full stack (cdn and ACM certificate) then creates DNS records.
+The Torus Stack SDK has a series of methods that take care of generating/provisioning cloudformation templates. The deployment process for a complete stack will first deploy a cloudformation template with an s3 bucket, public policy and a hosted zone. Then it will update it with a cloudfront distribution.
+
+If there are existing buckets/cdn's/hosted zones for the given domain, torus will propmpt you to confirm if you want to import those resources.
 
 ![](img/how-torus-stack-works.png)
 
-1. Setting up
-2. Generating templates
-3. if(existing reosurces) import existing resources
-4. if(template doesnt include all basic resources) deploying partial stack
-5. if(domain != dns) updating nameservers
-6. if(content) uploading content
-7. if(full template != existing template) deploying the full stack
-8. if(dns != AWS) creating DNS recrods
 # Cost breakdown (from AWS)
 
 This is a breakdown of the costs of hosting a static site in AWS
