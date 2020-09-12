@@ -4,7 +4,7 @@ const stack = {
   bucket: true,
   www: true,
   dns: true,
-  cdn: true,
+  cdn: false,
   https: false
 }
 
@@ -16,7 +16,7 @@ const config = {
     domain: 'godaddy',
     bucket: 'aws',
     cdn: 'aws',
-    dns: 'godaddy',
+    dns: 'aws',
     https: 'aws'
   }
 }

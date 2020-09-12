@@ -41,6 +41,7 @@ describe('Check the generateTemplate method', function() {
       assert.equal(typeof templateBody, "object")
       assert.equal(JSON.stringify(templateBody).length>20? true:false, true)
       let validate = await cloudformation.validateTemplate({TemplateBody: JSON.stringify(templateBody)}).promise().catch(err=>console.log(err))
+      console.log(validate)
       assert.equal(typeof validate, 'object')
     });
   });
