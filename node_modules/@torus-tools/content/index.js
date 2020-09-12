@@ -1,7 +1,12 @@
+const list = require('./lib/storage/list')
+const download = require('./lib/storage/download')
+const remove = require('./lib/storage/delete')
 const {uploadFiles, getFiles} = require('./lib/storage/upload')
-//const download = require('./lib/download')
-//const remove = require('./lib/delete')
+const invalidateCache = require('./lib/cache/invalidateCache')
 
-module.exports.getFiles = getFiles
-module.exports.uploadFiles = uploadFiles
-//for(let d in download) module.exports[d].download = download[d]
+module.exports.listFiles = getFiles
+module.exports.listContent = list.aws
+module.exports.downloadContent = download.aws
+module.exports.deleteContent = remove.aws
+module.exports.uploadContent = uploadFiles
+module.exports.invalidateCache = invalidateCache
