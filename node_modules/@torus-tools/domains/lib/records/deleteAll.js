@@ -23,15 +23,18 @@ function aws(domain){
             )
           }
         }
-        var params = {
-          ChangeBatch: {
-            Changes: changes
-          }, 
-          HostedZoneId: id
+        if(changes.length > 0){
+          var params = {
+            ChangeBatch: {
+              Changes: changes
+            }, 
+            HostedZoneId: id
+          }
+          route53.changeResourceRecordSets(params).promise()
+          .then(data => resolve(data))
+          .catch(err => reject(err))
         }
-        route53.changeResourceRecordSets(params).promise()
-        .then(data => resolve(data))
-        .catch(err => reject(err))
+        else resolve('No records to delete')
       })
     }).catch(err=>reject(err))
   })

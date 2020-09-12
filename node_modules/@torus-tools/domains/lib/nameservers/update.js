@@ -25,6 +25,7 @@ function aws(domain, nameservers){
 //GoDaddy
 function godaddy(domain, nameservers){
   return new Promise((resolve, reject) => {
+    //console.log('EXECUTING NAMESERVER UPDATE ', domain, nameservers)
     var url = `https://api.godaddy.com/v1/domains/${domain}`
     axios({
       method: 'patch',
@@ -37,8 +38,8 @@ function godaddy(domain, nameservers){
         "nameServers": nameservers
       }
     })
-    .then(res => resolve(res.data))
-    .catch(err => reject(err))
+    .then(response => resolve(response.data))
+    .catch(error => reject(error))
   })
 }
 
