@@ -1,0 +1,9 @@
+.env
+node_modules
+.git
+.github
+package.json
+package-lock.json
+LICENSE
+.gitignore
+.torusignore

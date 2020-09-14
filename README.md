@@ -1,61 +1,134 @@
-<img src="https://github.com/arjan-tools/site/blob/master/img/arjan_deploy_logo.svg" alt="Arjan Localize" width="200" style="max-width:100%;">
+# Torus Stack
+A promise-based javascript SDK that generates and deploys JSON cloudformation templates for static websites in AWS. It uses the AWS SDK to create, and execute changesets in a particular sequence that enables automation of the entire process while maintaining a short deployment time.
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://gkpty.mit-license.org)
+You are free to customize the generated cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the torus stack SDK/CLI command. You can also push the arjan_config to github and enable other team-members (with permission) to collaborate on the stack.
 
-# Arjan Deploy
+## Features
+- Creates a single cloudformation template
+- Saves your cloudformation changesets locally
+- Automatically imports existing resources for a given domain in AWS
+- Adds continous deployment with github using codepipeline
+- Completely open source
+- Responsive community support 🙂
+## Getting Started
 
-Arjan Deploy helps you deploy static websites to the AWS Cloud using Cloudformation. Arjan Deploy gives you several different options to deploy your static websites in AWS. Also it helps you import existing AWS projects, or individual resources into your websites project. The tool is modular and can be used with the Arjan CLI, or programmatically in your own node.js project. 
+**Prerequisites**
 
-## Static site architectures
+- An AWS account 
+- node and npm
+- The latest version of the Arjan CLI
 
-Generally static sites in the cloud consist of an object storage solution (i.e. S3), a DNS (from your domain name provider or your cloud provider) a CDN or cache distribution network, and optionally may contain a digital certificate. Arjan Gives you options to add the following resources to your stack depending on your needs. 
+**Deploy a static site with a CDN and HTTPS** 
 
-**root**: an s3 bucket for the root domain
-**dns**: Adds a Route53 Hosted zone to your stack. 
-**cdn**: Adds an AWS Cloudfront distribution to your sites stack. More about Cloudfront.
-**https**: creates a digital certificate for your domain with AWS ACM. If you have a route53 DNS it will automatically verify your certificate. Else you must manually verify your certificate with your DNS provider. 
-**www**: a reroute bucket for www
+- pop up your terminal, go into your desired project `cd project_name`, and run `arjan stack create prod`
 
-## Usage
-1. go to your project's directory `cd your_project`
-2. run `arjan init PROFILE REGION`
-3. If you want your site to be online while still in development you can run `arjan deploy DOMAIN create`
-4. Then to update your stack to production you can run `arjan deploy DOMAIN update prod` this will add a route53 DNS, a cloudfront distribution and a verified SSL ceritifcate to your stack.
-5. alternatively you can just run `arjan deploy DOMAIN create prod` from the start.
 
-In order to deploy a production site you must have already purchased a domain from a domain name registrar and you should have their respective interface open in order to create DNS records or transfer nameservers. there are several popular options out there; we like to use namecheap because as the name suggests it, its cheap, and it also has great service.
+- **When using Torus Tools you are using your own AWS account from your own machine.**
+- **Any charges incurred by your websites will be billed directly from AWS to your AWS account.**
+- **Torus Tools does NOT have any access to your AWS account/bill.**
 
-## Setups
+
+# Architecture
+
+Because the content in a static site doesnt have to be processed on a request basis it can be served completely from a server’s cache, or a cheaper cloud based object storage solution like AWS s3. To place the content closer to the end users, provide faster response times, and a secure url, a CDN (content distribution network) can be added.
+
+![The CDN fetches contet from the origin (s3 bucket) and distributes it to several edge locations scattered around the globe.](img/jam_stack_architecture.png)
+
+# setups
 
 For an easier development workflow we have defined some setups that include Dev, Test and Prod (production). You can customize these by additionally providing flags.
+
 **dev → test → prod**
 
 
-1. **Dev:** S3 root bucket with a public policy
-2. **Test:** S3 root bucket, www reroute bucket and a route53 hosted zone.
-3. **Prod:** CDN w/ Route53 DNS (https)**:** Deploys s3 bucket, route53 DNS, a cloudfront distribution and creates TLS certificates in AWS ACM.
+1. **Dev:** public S3 bucket
+2. **Test:** public S3 root bucket, www reroute bucket and a route53 hosted zone.
+3. **Prod:** public S3 root bucket, www reroute bucket, route53 hosted zone, cloudfront distribution, ACM certificate
+# How it Works
 
-**Custom Setup Examples**
+The Torus Stack SDK has a series of methods that take care of generating/provisioning cloudformation templates. The deployment process for a complete stack will first deploy a cloudformation template with an s3 bucket, public policy and a hosted zone. Then it will update it with a cloudfront distribution.
 
-1. **CDN w/ Route53 DNS (http):** Deploys s3 bucket, route53 DNS, and a cloudfront distribution.
-2. **CDN w/ external DNS (http):** Deploys s3 bucket and a Cloudfront distribution. You must create a CNAME record (and reroute record) in your external DNS.
-3. **CDN w/ external DNS (https)**: Deploys s3 bucket and a Cloudfront distribution and creates certificates in ACM. You must create a CNAME record (and optionally a reroute record) in your external DNS.
+If there are existing buckets/cdn's/hosted zones for the given domain, torus will propmpt you to confirm if you want to import those resources.
 
-## Route53 DNS
+![](img/how-torus-stack-works.png)
 
-Amazon Route 53 provides highly available and scalable Domain Name System (DNS), domain name registration, and health-checking web services. It is designed to give developers and businesses an extremely reliable and cost effective way to route end users to Internet applications by translating names like example.com into the numeric IP addresses, such as 192.0.2.1, that computers use to connect to each other.
+# Cost breakdown (from AWS)
 
-AWS Route53 has a $0.50/month cost (6$ a year). Its a better option than a standard DNS because:
+This is a breakdown of the costs of hosting a static site in AWS
+Let’s say your website uses CloudFront for a month (30 days), and the site has 1,000 visitors each day for that month. Each visitor clicked 1 page that returned a single object (1 request) and they did this once each day for 30 days. Turns out each request is 1MB for the amount of data transferred, so in total for the month that comes to 30,000MB or 29GB (1GB = 1,024MB). Half the requests are from the US and half are from Europe, so your monthly total for data transferred comes to $2.47. Also, each click is an HTTP request, so for the month that equals 30,000 HTTP requests, which comes to a total of $0.02 for the month. Adding the two values together, the total cost for using CloudFront for this example would be $2.49 for the month.
 
-- Route 53 offers powerful routing policies to allow for efficient DNS requests.
-- You can combine your DNS with health-checking services to route traffic to healthy endpoints or to independently monitor and/or alarm on endpoints. 
-- Route 53 effectively connects user requests to infrastructure running in AWS – such as Amazon EC2 instances, Elastic Load Balancing load balancers, or Amazon S3 buckets
-- can also be used to route users to infrastructure outside of AWS.
+| **Resource**   | **Consumption**      | **Cost**   |
+| -------------- | -------------------- | ---------- |
+| Cloudfront     | 29GB bandwith        | $ 2.47     |
+| Cloudfront     | 30,000 http requests | $ 0.02     |
+| Route53        | 1 Hosted Zone        | $ 0.50     |
+| s3             | 5GB storage          | $ 0.15     |
+| **Total Cost** | ------------------   | **$ 3.14** |
 
-## Using an External DNS
 
-You can only use an external DNS if you include the CDN option and exclude the route53 option. If you are using an external DNS a CNAME record pointing to the root will invalidate all other records pointing to the root; so if you have other records pointing to your root, for example mail exchange (MX) records to send/receive email with your custom domain you will have to perform some additional steps.
+# Programmatic Usage
+    const {deployStack} = require('../lib/deployStack')
+    
+    deployStack('testingsit.com', {bucket:true}, {index:'index.html', error:'error.html', providers:{bucket:'aws'}}, true)
 
-Instead of pointing the CNAME record to the root, you can point to the CNAME to the www subdomain. Then you can create a reroute or FWD record in your DNS provider console to reroute all http requests coming in to the root to the www.
 
-### For more information visit the [docs](https://arjan.tools/docs)
+# API
+
+## stackExists(domain)
+- **description**: determines wether or not a stack exists for a given domain. If it does exist it returns the stack's ID.
+- **params**: (domain)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+- **returns**: promise(resolve, reject)
+  - **resolve**: (stackID | null)
+    - **stackID**: STRING: ID or ARN (Amazon resource number) of the existing resource
+  - **reject**: (error) 
+
+## resourceExists.resource(domain)
+- **description**: determines wether or not a particular resource exists for a given domain. If it does exist it returns the resource's ID/ARN Resources include:
+  - CloudFrontDist
+  - RootBucket
+  - HostedZone
+  - AcmCertificate
+- **params**: (domain)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+- **returns**: promise(resolve, reject)
+  - **resolve**: (ResourceID | null)
+    - **resourceID**: STRING: ID or ARN (Amazon resource number) of the existing resource
+  - **reject**: (error) 
+
+## generateTemplate(domain, stack, config, template, overwrite)
+- **description**: Generates a cloudformation template for a given domain
+- **params**: (domain, stack, config, template, overwrite)
+  - **domain**: STRING: REQUIRED: the root domain of your site i.e. yoursite.com
+  - **stack**: OBJECT: REQUIRED: Contains the desired resources for the given stack with boolean values
+    ```
+      const stack = {
+      bucket: true,
+      www: true,
+      dns: true,
+      cdn: false,
+      https: false
+    }
+    ```
+  - **config**: OBJECT: REQUIRED: Stack configuration. Contains the desired providers for each resource as well as the index and error documents.
+    ```
+    const config = {
+      index:"index.html",
+      error:"error.html",
+      last_deployment:"",
+      providers: {
+        domain: 'godaddy',
+        bucket: 'aws',
+        cdn: 'aws',
+        dns: 'aws',
+        https: 'aws'
+      }
+    }
+    ```
+  - **template**: OBJECT: An existing JSON cloudformation template that you wicsh to modify
+  - **overwrite**: BOOLEAN: Set as true if you wish to overwrite the existing template with the generated template. By default, only new resources are added to the existing template.
+- **returns**: promise(resolve, reject)
+  - **resolve**: ({"template":{}, "existingResources":[]})
+    - **template**: OBJECT: the generated cloudformation template
+    - **existingResource**: ARRAY: an array of resources that exist for the given domain that should be imported into the template
+  - **reject**: (error)
