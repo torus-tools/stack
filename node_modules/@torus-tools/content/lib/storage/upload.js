@@ -13,9 +13,11 @@ function scanFiles(dir){
 }
 
 function scanDir(currentDirPath, callback) {
-  var gitignore = fs.readFileSync('.torusignore', 'utf8')
+  var gitignore = fs.existsSync('.gitignore')? fs.readFileSync('.gitignore', 'utf8'): null
+  var torusignore = fs.existsSync('.torusignore')? fs.readFileSync('.torusignore', 'utf8'): null
   var ignorePaths = {}
   for(let path of gitignore.split('\n')) if(path.trim().length > 1) ignorePaths[path.trim()] = true
+  for(let path of torusignore.split('\n')) if(path.trim().length > 1) ignorePaths[path.trim()] = true
   fs.readdirSync(currentDirPath).forEach((name)=>{
     var filePath = path.join(currentDirPath, name);
     var stat = fs.statSync(filePath);

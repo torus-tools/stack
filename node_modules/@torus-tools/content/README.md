@@ -7,7 +7,6 @@ A promise-based javascript SDK that facilitates operations related to content st
 - upload
 - delete
 
-
 ## Currently Supporting
 - AWS
 
