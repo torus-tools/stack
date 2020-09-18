@@ -1,6 +1,6 @@
 {
   "name": "@torus-tools/stack",
-  "version": "0.0.123",
+  "version": "0.0.124",
   "description": "A promise-based SDK for generating, deploying and managing stacks in AWS with cloudformation.",
   "main": "index.js",
   "scripts": {
