@@ -1,4 +1,4 @@
-require('dotenv').config();
+/* require('dotenv').config();
 var AWS = require('aws-sdk');
 var cloudformation = new AWS.CloudFormation({apiVersion: '2010-05-15'});
 
@@ -7,3 +7,4 @@ let templateBody = {"AWSTemplateFormatVersion":"2010-09-09","Resources":{"RootBu
 cloudformation.validateTemplate({TemplateBody: JSON.stringify(templateBody)}).promise()
 .then((data)=> console.log(data))
 .catch(err=>console.log(err))
+ */

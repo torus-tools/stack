@@ -1,4 +1,4 @@
-const dns = require('@torus-tools/domains')
+/* const dns = require('@torus-tools/domains')
 
 const ns = [
   'ns-822.awsdns-38.net',
@@ -9,4 +9,4 @@ const ns = [
 
 dns.godaddy.updateNameservers('localizehtml.com', ns)
 .then(data=>console.log(data)).catch(err=>console.log(err))
-//updateNameServers.aws('torusframework.com', ns).then(data=>console.log(data)).catch(err=>console.log(err))
+//updateNameServers.aws('torusframework.com', ns).then(data=>console.log(data)).catch(err=>console.log(err)) */
