@@ -116,8 +116,10 @@ Let’s say your website uses CloudFront for a month (30 days), and the site has
   - **config**: OBJECT: REQUIRED: Stack configuration. Contains the desired providers for each resource as well as the index and error documents.
     ```
     const config = {
-      index:"index.html",
-      error:"error.html",
+      options:{
+        index:"index.html",
+        error:"error.html"
+      }
       last_deployment:"",
       providers: {
         domain: 'godaddy',
