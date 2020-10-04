@@ -1,4 +1,4 @@
-const {deployStack} = require('../lib/deployStack')
+/* const {deployStack} = require('../lib/deployStack')
 
 const stack = {
   bucket: true,
@@ -21,4 +21,4 @@ const config = {
   }
 }
 
-deployStack('localizehtml.com', stack, config, true)
+deployStack('localizehtml.com', stack, config, true) */

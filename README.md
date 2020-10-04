@@ -1,7 +1,10 @@
 # Torus Stack
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://gkpty.mit-license.org)
+[![Build Status](https://travis-ci.com/torus-tools/stack.svg?branch=master)](https://travis-ci.com/torus-tools/stack)
+
 A promise-based javascript SDK that generates and deploys JSON cloudformation templates for static websites in AWS. It uses the AWS SDK to create, and execute changesets in a particular sequence that enables automation of the entire process while maintaining a short deployment time.
 
-You are free to customize the generated cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the torus stack SDK/CLI command. You can also push the arjan_config to github and enable other team-members (with permission) to collaborate on the stack.
+You are free to customize the generated cloudformation template or its resources individually in any way you want using the AWS console/CLIs/SDKs and/or the torus stack SDK/CLI command. You can also push the torus/config.json to github and enable other team-members (with permission) to collaborate on the stack.
 
 ## Features
 - Creates a single cloudformation template
@@ -16,11 +19,11 @@ You are free to customize the generated cloudformation template or its resources
 
 - An AWS account 
 - node and npm
-- The latest version of the Arjan CLI
+- The latest version of the torus CLI
 
 **Deploy a static site with a CDN and HTTPS** 
 
-- pop up your terminal, go into your desired project `cd project_name`, and run `arjan stack create prod`
+- pop up your terminal, go into your desired project `cd project_name`, and run `torus stack create prod`
 
 
 - **When using Torus Tools you are using your own AWS account from your own machine.**
